@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const { stdin, exit } = require('process');
 
-fs.createWriteStream(path.join(__dirname, 'text.txt'));
+const text = fs.createWriteStream(path.join(__dirname, 'text.txt'));
 console.log('Hello! Write the text here:/n');
 
 function exitFile() {
@@ -13,11 +13,10 @@ function exitFile() {
 stdin.on('data', (data) => {
   const info = data.toString().trim();
   if (info !== 'exit') {
-    fs.appendFile(path.join(__dirname, 'text.txt'), info + ' ', (err) => {
-      if (err) throw err;
-    });
+    text.write(data);
   } else {
     exitFile();
   }
-  process.on('SIGINT', exitFile());
 });
+
+process.on('SIGINT', exitFile);
